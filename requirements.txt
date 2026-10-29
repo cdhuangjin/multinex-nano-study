@@ -1,0 +1,14 @@
+torch>=2.6
+torchvision
+numpy
+PyYAML
+opencv-python
+Pillow
+scipy
+scikit-image
+pytorch-msssim
+einops
+onnx
+onnxscript
+onnxruntime
+matplotlib

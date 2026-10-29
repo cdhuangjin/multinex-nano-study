@@ -1,0 +1,125 @@
+name: distill-v1-screening-N0-s110
+model_type: ImageCleanModel
+scale: 1
+num_gpu: 1
+manual_seed: 110
+use_amp: false
+datasets:
+  train:
+    name: TrainSet
+    type: Dataset_PairedImage
+    dataroot_gt: E:/Datasets/LOL_v1_original_author/our485/high
+    dataroot_lq: E:/Datasets/LOL_v1_original_author/our485/low
+    geometric_augs: true
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+    use_shuffle: true
+    num_worker_per_gpu: 0
+    batch_size_per_gpu: 2
+    mini_batch_sizes:
+    - 2
+    iters:
+    - 3000
+    gt_size: 256
+    gt_sizes:
+    - 256
+    dataset_enlarge_ratio: 1
+    prefetch_mode: null
+  val:
+    name: ValSet
+    type: Dataset_PairedImage
+    dataroot_gt: E:/Datasets/LOL_v1_original_author/our485/high
+    dataroot_lq: E:/Datasets/LOL_v1_original_author/our485/low
+    io_backend:
+      type: disk
+network_g:
+  type: MultinexNano
+  in_ch: 3
+  out_ch: 3
+  base_channels: 3
+  width_mult: 1.0
+  use_depthwise: true
+  act: ReLU
+  per_illum_proj: false
+  per_chroma_proj: false
+  use_illum_attn: true
+  use_chroma_attn: true
+  illum_mid: 1
+  chroma_mid: 1
+  reduction_ratio: 3
+  luma_head_act: null
+  chroma_head_act: null
+  retinex_residual: true
+  eps: 1.0e-09
+  illum_flags:
+    mean: false
+    rec709: true
+    vmax: true
+    lightness: true
+    ycgco: false
+    l2norm: true
+  chroma_flags:
+    yuv_uv: false
+    ycbcr_cbcr: true
+    opponent: false
+    chroma_rg: true
+    hsv_s: true
+    litags: false
+  target_params: 300
+path:
+  pretrain_network_g: null
+  strict_load_g: true
+  resume_state: null
+train:
+  total_iter: 3000
+  warmup_iter: -100
+  use_grad_clip: true
+  scheduler:
+    type: CosineAnnealingRestartCyclicLR
+    periods:
+    - 920
+    - 2080
+    restart_weights:
+    - 1
+    - 1
+    eta_mins:
+    - 0.0003
+    - 1.0e-06
+  mixing_augs:
+    mixup: true
+    mixup_beta: 1.2
+    use_identity: true
+  optim_g:
+    type: Adam
+    lr: 0.0002
+    betas:
+    - 0.9
+    - 0.999
+  pixel_opt:
+    type: HybridLoss
+    w_pixloss: 1.0
+    w_perc: 0.01
+    w_msssim: 0.2
+val:
+  window_size: 4
+  val_freq: 500
+  save_img: false
+  rgb2bgr: true
+  use_image: false
+  max_minibatch: 8
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 500
+  use_tb_logger: false
+  wandb: null
+dist_params:
+  backend: nccl
+  port: 29500
+experiment:
+  torch_home: E:\Datasets\pretrained_model_cache\torch

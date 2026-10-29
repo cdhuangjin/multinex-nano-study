@@ -1,0 +1,9 @@
+code/
+__pycache__/
+*.pyc
+runs/
+split_local.json
+.venv/
+*.pth
+*.onnx
+!checkpoints/*.pth

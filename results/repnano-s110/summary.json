@@ -1,0 +1,19 @@
+{
+  "status": "COMPLETE",
+  "step": 3000,
+  "final": {
+    "psnr": 19.283433320194106,
+    "ssim": 0.7733032976119258,
+    "seconds": 6.761612500005867
+  },
+  "best": {
+    "step": 3000,
+    "psnr": 19.283433320194106,
+    "ssim": 0.7733032976119258,
+    "seconds": 6.761612500005867
+  },
+  "baseline_n0_psnr": 19.20003380810329,
+  "success_threshold_strict": 19.15,
+  "success": true,
+  "elapsed_seconds": 452.48399999999674
+}
